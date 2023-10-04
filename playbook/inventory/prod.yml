@@ -4,12 +4,7 @@ clickhouse:
     clickhouse-01:
       ansible_host: "172.18.0.3"
 
-        #vector:
-        #hosts:
-        #vector-01:
-        #ansible_host: "172.18.0.3"
-
-        #lighthouse:
-        #hosts:
-        #lighthouse-01:
-        #ansible_host: "172.18.0.2"
+vector:
+  hosts:
+    vector-01:
+      ansible_host: "172.18.0.3"
