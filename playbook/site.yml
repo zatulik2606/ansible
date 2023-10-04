@@ -1,4 +1,4 @@
----
+---`
 - name: Install Clickhouse
   hosts: clickhouse
   handlers:
