@@ -3,7 +3,7 @@
   hosts: clickhouse
   handlers:
     - name: Start clickhouse service
-      become: true
+      become: no
       ansible.builtin.service:
         name: clickhouse-server
         state: restarted
@@ -12,18 +12,18 @@
       block:
         - name: Get clickhouse distrib
           ansible.builtin.get_url:
-            url: "https://packages.clickhouse.com/rpm/stable/{{ item }}-{{ clickhouse_version }}.noarch.rpm"
+            url: "https://packages.clickhouse.com/rpm/stable/clickhouse-client-23.9.1.1854.x86_64.rpm"
             dest: "./{{ item }}-{{ clickhouse_version }}.rpm"
             mode: "0755"
           with_items: "{{ clickhouse_packages }}"
       rescue:
         - name: Get clickhouse distrib
           ansible.builtin.get_url:
-            url: "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-{{ clickhouse_version }}.x86_64.rpm"
+            url: "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-dbg-22.8.21.38.aarch64.rpm"
             dest: "./clickhouse-common-static-{{ clickhouse_version }}.rpm"
             mode: "0755"
     - name: Install clickhouse packages
-      become: true
+      become: no
       ansible.builtin.yum:
         name:
           - clickhouse-common-static-{{ clickhouse_version }}.rpm
@@ -34,9 +34,9 @@
     - name: Flush handlers
       ansible.builtin.meta: flush_handlers
 # Задержка после рестарта сервера, что бы успел запустится
-    - name: Delay 5 sec
+    - name: Delay 20 sec
       ansible.builtin.pause:
-        seconds: 5
+        seconds: 20
     - name: Create database
       ansible.builtin.command: "clickhouse-client -q 'create database logs;'"
       register: create_db
@@ -48,7 +48,7 @@
 # handlers для старта/рестарта сервиса Vector
   handlers:
     - name: Start Vector service
-      become: true
+      become: no
       ansible.builtin.service:
         name: vector
         state: restarted
@@ -62,7 +62,7 @@
         mode: "0755"
 # Установка rpm пакета vector
     - name: Install Vector packages
-      become: true
+      become: no
       ansible.builtin.yum:
         name: vector-0.21.1-1.{{ ansible_architecture }}.rpm
       notify: Start Vector service
@@ -70,6 +70,6 @@
     - name: Deploy config Vector
       ansible.builtin.template:
         src: vector.j2
-        dest: /etc/vector/vector.toml
+        dest: /etc/vector/vector.yml
         mode: "0755"
       notify: Start Vector service
