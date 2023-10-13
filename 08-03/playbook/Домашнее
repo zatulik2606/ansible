@@ -27,6 +27,14 @@
    ```
 
 2. При помощи `ansible-galaxy` скачайте себе эту роль.
+~~~
+
+root@debian:~/ansible/08-03/playbook# ansible-galaxy install -r requirements.yml -p roles
+Starting galaxy role install process
+- extracting clickhouse to /root/ansible/08-03/playbook/roles/clickhouse
+- clickhouse (1.13) was installed successfully
+
+~~~
 3. Создайте новый каталог с ролью при помощи `ansible-galaxy role init vector-role`.
 4. На основе tasks из старого playbook заполните новую role. Разнесите переменные между `vars` и `default`. 
 5. Перенести нужные шаблоны конфигов в `templates`.
